@@ -14,4 +14,18 @@ class Project extends Model
         //conect projects with task
         return $this->hasMany(Task::class);
     }
-}
+
+    public function createdBy()
+    {
+        //conect projects with task
+        return $this->belongsTo(User::class ,'created_by');
+    }
+
+    public function updatedBy()
+    {
+        //conect projects with task
+        return $this->belongsTo(User::class ,'updated_by');
+    }
+}  
+
+   
