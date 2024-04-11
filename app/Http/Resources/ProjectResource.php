@@ -25,8 +25,8 @@ class ProjectResource extends JsonResource
             'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
             'status' => $this->status,
             'image_path' => $this->image_path,
-            'createdBy' => $this->createdBy,  // it has a conection to project.php created_by model, with the user (it's gonna return the user object )
-            'updatedBy' => $this->updatedBy, //t has a conection to project.php updated_by model, with the user (it's gonna return the user object )
+            'createdBy' => new UserResource( $this->createdBy),  // it has a conection to project.php created_by model, with the user (it's gonna return the user object )), // it has a conection to project.php created_by model, with the user (it's gonna return the user object )
+            'updatedBy' => new UserResource( $this->updatedBy), //t has a conection to project.php updated_by model, with the user (it's gonna return the user object )
         ];
     }
 }
