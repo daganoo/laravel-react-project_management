@@ -1,9 +1,25 @@
 import Pagination from "@/Components/Pagination";
+import SelectInput from "@/Components/SelectInput";
+import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants";
 import { Head, Link, router } from "@inertiajs/react";
 
-export default function Index({ auth, projects }) {
+export default function Index({ auth, projects, queryParams = null }) {
+    queryParams = queryParams || {};
+    const searchFieldChanged = (name, value) => {
+        if (value) {
+            queryParams[name] = value;
+        } else {
+            delete queryParams[name];
+        }
+    };
+    const onKeyPress = (name, e) => {
+        if (e.key !== "Enter") return;
+
+        searchFieldChanged(name, e.target.value);
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -40,6 +56,56 @@ export default function Index({ auth, projects }) {
                                         </th>
                                     </tr>
                                 </thead>
+
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
+                                    <tr className="text-nowrap mb-6">
+                                        <th className="px-3 py-2"></th>
+                                        <th className="px-3 py-2"></th>
+                                        <th className="px-3 py-2">
+                                            <TextInput
+                                                className="w-full"
+                                                placeholder="Project Name"
+                                                onBlur={(e) =>
+                                                    searchFieldChanged(
+                                                        "name",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                onKeyPress={(e) =>
+                                                    onKeyPress("name", e)
+                                                }
+                                            />
+                                        </th>
+                                        <th className="px-3 py-2">
+                                            <SelectInput
+                                                className="w-full "
+                                                onChang={(e) =>
+                                                    searchFieldChanged(
+                                                        "status",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            >
+                                                <option value="sss">
+                                                    Select Status
+                                                </option>
+                                                <option value="sss">
+                                                    Pending
+                                                </option>
+                                                <option value="sss">
+                                                    In Progress
+                                                </option>
+                                                <option value="sss">
+                                                    Complated
+                                                </option>
+                                            </SelectInput>
+                                        </th>
+                                        <th className="px-3 py-2"></th>
+                                        <th className="px-3 py-2"></th>
+                                        <th className="px-3 py-2"></th>
+                                        <th className="px-3 py-2 "></th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     {projects.data.map((project) => (
                                         <tr
@@ -50,7 +116,8 @@ export default function Index({ auth, projects }) {
                                                 {project.id}
                                             </td>
                                             <td className="px-3 py-2 ">
-                                                <img className="sm:rounded-lg"
+                                                <img
+                                                    className="sm:rounded-lg"
                                                     src={project.image_path}
                                                     style={{ width: 60 }}
                                                 />
@@ -62,7 +129,7 @@ export default function Index({ auth, projects }) {
                                             <td className="px-3 py-2 ">
                                                 <span
                                                     className={
-                                                        "px-2 py-2 sm:rounded-lg text-white " +
+                                                        " px-2 py-2 sm:rounded-lg text-white " +
                                                         PROJECT_STATUS_CLASS_MAP[
                                                             project.status
                                                         ]
@@ -91,7 +158,7 @@ export default function Index({ auth, projects }) {
                                                         "project.edit",
                                                         project.id
                                                     )}
-                                                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
+                                                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1 "
                                                 >
                                                     Edit
                                                 </Link>
